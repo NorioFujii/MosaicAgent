@@ -1,0 +1,16 @@
+{
+  "name": "アート・エージェント",
+  "short_name": "制作手順支援",
+  "description": "ルービック・キューブのモザイクアート",
+  "icons": [
+    {
+      "src": "myaku_512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "start_url": "index.html",
+  "display": "fullscreen",
+  "theme_color": "#dff0d8",
+  "background_color": "#dff0d8"
+}
