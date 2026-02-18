@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ja"><head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head><body><br>
+<script type=text/javascript>
+  window.resizeTo(560,540);
+  let input_file;
+  let output_file;
+function menu_selected(no) {
+        console.log(no + ".が選択されました！"); 
+        myForm.sel.value = no;
+        if (no=="1") {
+            window.open('./MakeMosaic.html','_NEW');
+        }
+        if (no=="4") {
+            window.open('https://mori1-hakua.tokyo/python/Mosaic/ALGmoz0.html','algFJ');
+        }
+        if ((no=="8")||(no=="9")) {
+            if (myForm.hin.value=="") myForm.reset();
+            else {
+                if (typeof(processHTML) != 'undefined') {
+                    HTreader.readAsText(HTfile);
+                    setTimeout("document.getElementById('agent').value = 7;",5000);
+                    return;
+                }
+                else if (navigator.onLine) {
+                    alert('ネットワークに接続されていません');
+                    return;
+                }
+                if (no=="8") console.log("変換処理に進みます: "+ myForm.hin.value);
+                             //          ===== HTML加工 =====
+                             //          ===== 新HTMLプレビュー表示 =====
+                myForm.submit();
+                setTimeout("document.getElementById('agent').value = 7;",5000);
+            }
+        }
+}
+let HTfile, HTreader;
+window.addEventListener('load', () => {
+  const f = document.getElementsByName('files')[0];
+  f.addEventListener('change', evt => {
+    let input = evt.target;
+    if (input.files.length == 0) {
+      console.log('No file selected');
+      return;
+    }
+    const mode = myForm.mode.value;
+    HTfile = input.files[0];
+    HTreader = new FileReader();
+    HTreader.onload = () => {
+        console.log("変換処理に進みます: "+ HTfile.name);
+        const newHtml = processHTML(HTreader.result, mode);
+        // ダウンロードさせる、または別ウィンドウで開く
+        const blob = new Blob([newHtml], { type: 'text/html' });
+        const url = URL.createObjectURL(blob);
+                 setTimeout("document.getElementById('agent').value = 7;",5000);
+       window.open(url, '_blank');
+    };
+  });
+});
+  const savePage = (inout) => {
+    const blob = new Blob([document.documentElement.outerHTML], { type: 'text/html' });
+    const a = document.createElement('a');
+    a.href = "https://mori1-hakua.tokyo/python/tmp/"+inout;
+    a.download = inout ;
+    a.click();
+  };
+</script>
+<script src="./js/GANagentL.js"></script>
+<h2>キューブ・モザイク・アート制作エージェント</h2>
+<h1>STEPを選択してください</h1>
+<select id="agent" size="9" onchange="menu_selected(this.value)">
+    <option value=1>１．写真からモザイクへ変換するためのページを開く</option>
+    <option value=2>２．画面をクリックして目的の写真をUPLOADし、(10~20)x(10~30)で「NEXT」へ</option>
+    <option value=3>３．お気に入りの手法を選び、良品選択後「<u>EDIT PIXEL-BY-PIXEL</u>」を押す</option>
+    <option value=4>４．HTML取得画面でﾀﾞｳﾝﾛｰﾄﾞされたminiature.pngをDrop、「Start」を押す</option>
+    <option value=5>５．HTML取得画面の回転手順が表示されたら、「HTML取得」ボタンを押す</option>
+    <option value=6>６．５．のhtmlが「HTML取得」により、ﾀﾞｳﾝﾛｰﾄﾞフォルダにあることを確認する </option>
+    <option value=7>７．休　憩</option>
+    <option value=8>８．出力と入力HTMLファイルを指定し、変換されたHTMLﾀﾞｳﾝﾛｰﾄﾞを確認する</option>
+    <option value=9>９．ﾀﾞｳﾝﾛｰﾄﾞされた新HTMLファイルを入力HTMLに指定し、プレビュー表示する</option>
+</select>
+<form id="myForm" name="myForm" method="post" action="./GANwebmain.py" target="algFJ" enctype="multipart/form-data">
+  入力HTMLファイル：<input type="file" name="files" onchange="myForm.hin.value=files[0].name"/><br>
+  出力HTMLファイル：ファイル名入力　<input type="text" name="hout" value=""/><br>
+  <input type="hidden" name="hin" value="" />
+  sel:<input type="text" name="sel" size=5 value="8" readonly />
+  &nbsp;　　　プレビュー表示モード：&nbsp;<select id="mode" name="mode" value="2"/>
+    <option value="2" selected>１．作成と戻し</option>
+    <option value="1">２．作成のみ</option>
+    <option value="0">３．戻し(含救済)</option>
+    <option value="3">４．作成ｱﾆﾒｰｼｮﾝ</option>
+</select></form>
+</body>
+</html>
